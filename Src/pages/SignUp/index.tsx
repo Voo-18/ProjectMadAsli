@@ -1,47 +1,101 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
-  Image,
   ScrollView,
   StyleSheet,
+  Text,
+  TextInput,
   TouchableOpacity,
   View,
-  Text,
+  Image,
 } from 'react-native';
-import Button from '../../Componets/atoms/Buttom';
-import Header from '../../Componets/molecules/Header';
-import Gap from '../../Componets/atoms/Gap';
-import TextInput from '../../Componets/molecules/TextInput';
 
 const SignUp = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const isFormValid = email && password && confirm;
+
   return (
-    <ScrollView style={styles.container}>
-      <Header title="Sign Up" />
-      <Gap height={24} />
-      <View style={styles.contentWrapper}>
-        <View style={styles.profileContainer}>
-          <View style={styles.profile}>
-            <View style={styles.addPhoto}>
-              <TouchableOpacity activeOpacity={0.5}>
-                <Text style={styles.addPhotoLabel}>Add Photo</Text>
-                {/* <Image source={NullPhoto} style={styles.avatar} /> */}
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-        <Gap height={26} />
-        <TextInput label="Full Name" placeholder="Type your full name" />
-        <Gap height={16} />
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Sign up</Text>
+
+      <View style={styles.inputWrapper}>
+        <Text style={styles.label}>Email</Text>
         <TextInput
-          label="Email Address"
-          placeholder="Type your email address"
+          style={styles.input}
+          placeholder="Enter your email"
+          value={email}
+          onChangeText={setEmail}
         />
-        <Gap height={16} />
-        <TextInput label="Password" placeholder="Type your password" />
-        <Gap height={24} />
-        <Button
-          label="Continue"
-          onPress={() => navigation.navigate('SignIn')}
+      </View>
+
+      <View style={styles.inputWrapper}>
+        <Text style={styles.label}>Create a password</Text>
+        <View style={styles.passwordWrapper}>
+          <TextInput
+            style={styles.input}
+            placeholder="must be 8 characters"
+            secureTextEntry={!showPassword}
+            value={password}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={styles.eyeIcon}>
+            <Text>{showPassword ? '🙈' : '👁️'}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={styles.inputWrapper}>
+        <Text style={styles.label}>Confirm password</Text>
+        <View style={styles.passwordWrapper}>
+          <TextInput
+            style={styles.input}
+            placeholder="repeat password"
+            secureTextEntry={!showConfirm}
+            value={confirm}
+            onChangeText={setConfirm}
+          />
+          <TouchableOpacity
+            onPress={() => setShowConfirm(!showConfirm)}
+            style={styles.eyeIcon}>
+            <Text>{showConfirm ? '🙈' : '👁️'}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <TouchableOpacity
+        style={[
+          styles.loginButton,
+          {backgroundColor: isFormValid ? '#FF6A00' : '#FFA07A'},
+        ]}
+        disabled={!isFormValid}>
+        <Text style={styles.loginButtonText}>Log in</Text>
+      </TouchableOpacity>
+
+      <View style={styles.dividerContainer}>
+        <View style={styles.divider} />
+        <Text style={styles.orText}>Or Register with</Text>
+        <View style={styles.divider} />
+      </View>
+
+      <TouchableOpacity style={styles.googleButton}>
+        <Image
+          source={require('../../assets/icon/Google.jpg')}
+          style={styles.googleIcon}
+          resizeMode="contain"
         />
+      </TouchableOpacity>
+
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>Already have an account? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
+          <Text style={styles.footerLink}>Sign In</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -51,45 +105,88 @@ export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  contentWrapper: {
-    backgroundColor: '#FFFFFF',
-    flex: 1,
-    paddingHorizontal: 24,
-  },
-  profileContainer: {
-    marginTop: 26,
-    alignItems: 'center',
-  },
-  profile: {
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
+    padding: 24,
+    backgroundColor: '#fff',
+    flexGrow: 1,
     justifyContent: 'center',
-    height: 110,
-    width: 110,
-    borderRadius: 110 / 2,
-    borderWidth: 1,
-    borderColor: '#8D92A3',
-    borderStyle: 'dashed',
   },
-  addPhoto: {
-    backgroundColor: '#F0F0F0',
-    width: 90,
-    height: 90,
-    borderRadius: 90 / 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  addPhotoLabel: {
-    fontFamily: 'Poppins-Light',
-    fontSize: 14,
-    width: 40,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FF6A00',
     textAlign: 'center',
+    marginBottom: 32,
   },
-  avatar: {
-    height: 90,
-    width: 90,
-    borderRadius: 90 / 2,
+  inputWrapper: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 14,
+    color: '#000',
+    marginBottom: 4,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 14,
+    backgroundColor: '#FAFAFA',
+    flex: 1,
+  },
+  passwordWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  eyeIcon: {
+    padding: 10,
+  },
+  loginButton: {
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 24,
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#E5E5E5',
+  },
+  orText: {
+    marginHorizontal: 12,
+    color: '#8E8E93',
+  },
+  googleButton: {
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    padding: 12,
+    borderRadius: 10,
+  },
+  googleIcon: {
+    width: 24,
+    height: 24,
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 24,
+  },
+  footerText: {
+    color: '#000',
+  },
+  footerLink: {
+    color: '#FF6A00',
   },
 });

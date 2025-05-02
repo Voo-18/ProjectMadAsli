@@ -27,7 +27,6 @@ const Stepper = ({route, navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.back}>←</Text>
       </TouchableOpacity>
 
       <Text style={styles.counter}>{`${currentIndex + 1}/${

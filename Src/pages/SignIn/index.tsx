@@ -94,12 +94,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
   },
-  forgotContainer: {alignItems: 'flex-end', marginTop: 8},
+  forgotContainer: {alignItems: 'flex-end', marginTop: 16},
   forgotText: {color: '#FF6C44', fontSize: 12},
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 19,
   },
   line: {
     flex: 1,
