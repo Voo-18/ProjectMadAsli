@@ -7,64 +7,87 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import TextInput from '../../Componets/molecules/TextInput';
-import Button from '../../Componets/atoms/Buttom';
-import Gap from '../../Componets/atoms/Gap';
+import {Button} from '../../Componets/atoms/index';
+import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
+import {showMessage} from 'react-native-flash-message';
 
 const SignIn = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+
+  const onSubmit = () => {
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        const user = userCredential.user;
+
+        console.log('User signed in:', user);
+        navigation.navigate('Home', {uid: user.uid});
+      })
+      .catch(error => {
+        const errorMessage = error.message;
+        showMessage({
+          message: errorMessage,
+          type: 'danger',
+        });
+      });
+  };
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.pageContainer}>
-          <Text style={styles.title}>Sign in</Text>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.pageContainer}>
+        <Text style={styles.title}>Sign in</Text>
 
-          <View style={styles.contentContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput placeholder="Johndoe@exemple.com" style={styles.input} />
+        <View style={styles.contentContainer}>
+          <TextInput
+            label={'Email'}
+            placeholder="Type your email"
+            style={styles.input}
+            value={email}
+            onChangeText={value => setEmail(value)}
+          />
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            placeholder="Password"
+            secureTextEntry
+            style={styles.input}
+            value={password}
+            onChangeText={value => setPassword(value)}
+            secureTextEntry={true}
+          />
 
-            <Text style={styles.label}>Password</Text>
-            <TextInput
-              placeholder="Password"
-              secureTextEntry
-              style={styles.input}
+          <Button
+            onPress={onSubmit}
+            label="Log in"
             />
 
+          {/* Garis pemisah dan teks log in with */}
+          <View style={styles.dividerContainer}>
+            <View style={styles.line} />
+            <Text style={styles.loginWithText}>Log in with</Text>
+            <View style={styles.line} />
+          </View>
 
-            <Button
-              label="Log in"
-              backgroundColor="#FF6C44"
-              textColor="#FFFFFF"
-              height={50}
-              borderRadius={20}
-              onPress={() => navigation.navigate('Home')}
+          <TouchableOpacity style={styles.googleButton}>
+            <Image
+              source={require('../../assets/icon/LogoGoogle.png')}
+              style={styles.googleIcon}
+              resizeMode="contain"
             />
+          </TouchableOpacity>
 
-            {/* Garis pemisah dan teks log in with */}
-            <View style={styles.dividerContainer}>
-              <View style={styles.line} />
-              <Text style={styles.loginWithText}>Log in with</Text>
-              <View style={styles.line} />
-            </View>
-
-            <TouchableOpacity style={styles.googleButton}>
-              <Image
-                source={require('../../assets/icon/Google.jpg')}
-                style={styles.googleIcon}
-                resizeMode="contain"
-              />
+          <View style={styles.signupContainer}>
+            <Text style={styles.normalText}>No account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+              <Text style={styles.signupText}> Sign up</Text>
             </TouchableOpacity>
-
-            <View style={styles.signupContainer}>
-              <Text style={styles.normalText}>No account?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-                <Text style={styles.signupText}> Sign up</Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </ScrollView>
   );
 };
 

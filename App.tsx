@@ -8,8 +8,12 @@ import Pushday from './Src/pages/Pushday';
 import Pullday from './Src/pages/Pullday';
 import Legday from './Src/pages/Legday';
 import Stepper from './Src/pages/Stepper';
+
+
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import FlashMessage from 'react-native-flash-message';
+import './Src/config/Firebase';
 
 const Stack = createNativeStackNavigator();
 

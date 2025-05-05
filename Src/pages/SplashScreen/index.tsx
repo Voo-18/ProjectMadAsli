@@ -1,13 +1,15 @@
 import {StyleSheet, Text, View, Image} from 'react-native';
 import React, {useEffect} from 'react';
-import {Logo} from '../../assets/icon';
+const Logo = require('../../assets/icon/Fitnes.png');
+ // Pastikan path ke logo benar
 
 const SplashScreen = ({navigation}) => {
   useEffect(() => {
     setTimeout(() => {
       navigation.replace('SignIn');
-    }, 3000);
+    }, 6000); // Splash screen akan tampil selama 3 detik
   }, []);
+
   return (
     <View style={styles.container}>
       <Image source={Logo} style={styles.logo} />
@@ -20,13 +22,20 @@ export default SplashScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FF6c44',
+    backgroundColor: '#FF6C44',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  logo: {
+    width: 150, // Sesuaikan ukuran logo
+    height: 150, // Sesuaikan ukuran logo
+    marginBottom: 10, // Jarak antara logo dan teks
+  },
   title: {
-    fontSize: 32,
-    fontFamily: 'Poppins-Medium',
+    fontSize: 20,
+    fontFamily: 'Poppins-bold',
+    fontWeight: 'bold',
+    color: '#000', // Warna teks agar kontras dengan latar belakang
   },
 });

@@ -7,7 +7,7 @@ import {
   Image,
 } from 'react-native';
 import React from 'react';
-import Button from '../../Componets/atoms/Buttom';
+import Button from '../../Componets/atoms/Button';
 
 const StartFitness = ({navigation}) => {
   return (
