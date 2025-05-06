@@ -1,34 +1,48 @@
 import React from 'react';
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {
+  Text,
+  Pressable,
+  StyleSheet,
+  ViewStyle,
+  GestureResponderEvent,
+} from 'react-native';
 
-const Button = ({
-  label,
-  onPress,
-  backgroundColor = '#FF6C44',
-  textColor = '#FFFFFF',
-}) => {
+type ButtonProps = {
+  label: string;
+  onPress: (event: GestureResponderEvent) => void;
+  style?: ViewStyle;
+};
+
+const Button = ({label, onPress, style}: ButtonProps) => {
   return (
-    <TouchableOpacity
-      style={[styles.button, {backgroundColor}]}
-      activeOpacity={1} // Hilangkan efek transparansi
-      onPress={onPress}>
-      <Text style={[styles.text, {color: textColor}]}>{label}</Text>
-    </TouchableOpacity>
+    <Pressable
+      onPress={onPress}
+      style={({pressed}) => [
+        styles.button,
+        pressed && styles.buttonPressed,
+        style,
+      ]}>
+      <Text style={styles.label}>{label}</Text>
+    </Pressable>
   );
 };
 
-export default Button;
-
 const styles = StyleSheet.create({
   button: {
+    backgroundColor: '#FF6C44',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
     borderRadius: 12,
-    justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
   },
-  text: {
+  buttonPressed: {
+    backgroundColor: '#fff', // Warna saat ditekan
+  },
+  label: {
+    color: '#FFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });
+
+export default Button;

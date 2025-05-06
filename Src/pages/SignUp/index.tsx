@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {
-  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,19 +9,18 @@ import {
 } from 'react-native';
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
 import {getDatabase, ref, set} from 'firebase/database';
-import NullPhoto from '../../assets/icon/Fitnes.png'; // pastikan path-nya sesuai
+// pastikan path-nya sesuai
 import Button from '../../Componets/atoms/Button';
 import Gap from '../../Componets/atoms/Gap';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {showMessage} from 'react-native-flash-message';
 
-
 const SignUp = ({navigation}) => {
-  const [photo, setPhoto] = useState(NullPhoto);
   const [photoBased64, setPhotoBased64] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isHovered, setIsHovered] = useState(false); // State untuk hover
 
   const getImage = async () => {
     const result = await launchImageLibrary({
@@ -75,17 +73,12 @@ const SignUp = ({navigation}) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Gap height={30} />
       <Text style={styles.title}>Sign Up</Text>
 
-      <View style={styles.profileContainer}>
-        <TouchableOpacity activeOpacity={0.7} onPress={getImage}>
-          <Image source={photo} style={styles.avatar} />
-        </TouchableOpacity>
-      </View>
+      <Gap height={10} />
 
-      <Gap height={20} />
-
-      <Text style={styles.label}>Full Name</Text>
+      <Text style={styles.label}>Full Name :</Text>
       <TextInput
         style={styles.input}
         placeholder="Type your full name"
@@ -93,7 +86,7 @@ const SignUp = ({navigation}) => {
         onChangeText={setFullName}
       />
 
-      <Text style={styles.label}>Email Address</Text>
+      <Text style={styles.label}>Email Address :</Text>
       <TextInput
         style={styles.input}
         placeholder="Type your email"
@@ -102,7 +95,7 @@ const SignUp = ({navigation}) => {
         keyboardType="email-address"
       />
 
-      <Text style={styles.label}>Password</Text>
+      <Text style={styles.label}>Password :</Text>
       <TextInput
         style={styles.input}
         placeholder="Type your password"
@@ -112,7 +105,20 @@ const SignUp = ({navigation}) => {
       />
 
       <Gap height={24} />
-      <Button label="Continue" onPress={onSubmit} />
+
+      {/* Tombol Continue dengan efek hover */}
+      <TouchableOpacity
+        style={[
+          styles.continueButton,
+          isHovered && styles.continueButtonHover, // Tambahkan gaya hover jika isHovered true
+        ]}
+        onPress={onSubmit}
+        onPressIn={() => setIsHovered(true)} // Hover dimulai
+        onPressOut={() => setIsHovered(false)} // Hover selesai
+      >
+        <Text style={styles.continueText}>Continue</Text>
+      </TouchableOpacity>
+
       <Gap height={16} />
       <View style={styles.footer}>
         <Text>Already have an account? </Text>
@@ -154,16 +160,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     backgroundColor: '#FAFAFA',
   },
-  profileContainer: {
+  continueButton: {
+    backgroundColor: '#FF6A00',
+    paddingVertical: 14,
+    borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 16,
   },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: '#8D92A3',
+  continueButtonHover: {
+    backgroundColor: '#FF8C42', // Warna saat hover
+  },
+  continueText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   footer: {
     flexDirection: 'row',
