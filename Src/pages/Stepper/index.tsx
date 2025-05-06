@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,24 +11,54 @@ import {
 const Stepper = ({route, navigation}) => {
   const {exercises} = route.params;
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [sets, setSets] = useState(3);
+  const [sets, setSets] = useState(1);
+  const [timer, setTimer] = useState(60);
+  const [isRunning, setIsRunning] = useState(true);
 
   const current = exercises[currentIndex];
+
+  // Timer logic
+  useEffect(() => {
+    let interval;
+    if (isRunning && timer > 0) {
+      interval = setInterval(() => {
+        setTimer(prevTimer => prevTimer - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      setIsRunning(false);
+    }
+    return () => clearInterval(interval);
+  }, [isRunning, timer]);
 
   const handleNext = () => {
     if (currentIndex < exercises.length - 1) {
       setCurrentIndex(currentIndex + 1);
-      setSets(3);
+      setSets(1);
+      setTimer(60);
+      setIsRunning(true);
     } else {
-      navigation.goBack(); // atau navigate ke halaman selanjutnya
+      navigation.goBack();
+    }
+  };
+
+  const increaseSet = () => {
+    const newSet = sets + 1;
+    setSets(newSet);
+    setTimer(newSet * 60);
+    setIsRunning(true);
+  };
+
+  const decreaseSet = () => {
+    if (sets > 1) {
+      const newSet = sets - 1;
+      setSets(newSet);
+      setTimer(newSet * 60);
+      setIsRunning(true);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-      </TouchableOpacity>
-
       <Text style={styles.counter}>{`${currentIndex + 1}/${
         exercises.length
       }`}</Text>
@@ -36,19 +66,26 @@ const Stepper = ({route, navigation}) => {
       <Image source={current.image} style={styles.image} resizeMode="contain" />
       <Text style={styles.title}>{current.title}</Text>
 
+      <Text style={styles.timer}>
+        {`Time left: ${Math.floor(timer / 60)}:${String(timer % 60).padStart(
+          2,
+          '0',
+        )}`}
+      </Text>
+
       <View style={styles.setControl}>
-        <TouchableOpacity onPress={() => setSets(sets > 1 ? sets - 1 : 1)}>
+        <TouchableOpacity onPress={decreaseSet}>
           <Text style={styles.setButton}>-</Text>
         </TouchableOpacity>
 
         <Text style={styles.setNumber}>{sets}</Text>
 
-        <TouchableOpacity onPress={() => setSets(sets + 1)}>
+        <TouchableOpacity onPress={increaseSet}>
           <Text style={styles.setButton}>+</Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.reps}>10 reps</Text>
+      <Text style={styles.reps}>{sets * 10} reps</Text>
 
       <TouchableOpacity style={styles.continueButton} onPress={handleNext}>
         <Text style={styles.continueText}>Continue</Text>
@@ -67,10 +104,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 20,
   },
-  back: {position: 'absolute', top: 20, left: 20, fontSize: 30},
   counter: {position: 'absolute', top: 20, right: 20, fontSize: 18},
   image: {width: 200, height: 200, marginBottom: 20},
   title: {fontSize: 22, fontWeight: 'bold', marginBottom: 20},
+  timer: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FF6C44',
+    marginBottom: 20,
+  },
   setControl: {flexDirection: 'row', alignItems: 'center', marginBottom: 10},
   setButton: {fontSize: 30, paddingHorizontal: 20},
   setNumber: {fontSize: 24, marginHorizontal: 20},

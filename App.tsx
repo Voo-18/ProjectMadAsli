@@ -14,59 +14,64 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import FlashMessage from 'react-native-flash-message';
 import './Src/config/Firebase';
 import StartFitness from './Src/pages/Home';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+
+
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{animation: 'slide_from_right'}}>
+        {/* default animation */}
         <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
-          options={{headerShown: false}}
+          options={{headerShown: false, animation: 'fade'}}
         />
         <Stack.Screen
           name="SignIn"
           component={SignIn}
-          options={{headerShown: false}}
+          options={{headerShown: false, animation: 'slide_from_right'}}
         />
         <Stack.Screen
           name="SignUp"
           component={SignUp}
-          options={{headerShown: false}}
+          options={{headerShown: false, animation: 'slide_from_bottom'}}
         />
-        <Stack.Screen 
-          name="StartFitness" 
+        <Stack.Screen
+          name="StartFitness"
           component={StartFitness}
-          options={{headerShown: false}} 
+          options={{headerShown: false, animation: 'fade'}}
         />
-        <Stack.Screen 
-          name="Training" 
+        <Stack.Screen
+          name="Training"
           component={Training}
-          options={{headerShown: false}}
+          options={{headerShown: false, animation: 'slide_from_right'}}
         />
-        <Stack.Screen 
-          name="Pushday" 
+        <Stack.Screen
+          name="Pushday"
           component={Pushday}
-          options={{headerShown: false}}
+          options={{headerShown: false, animation: 'slide_from_right'}}
         />
-        <Stack.Screen 
-          name="Pullday" 
+        <Stack.Screen
+          name="Pullday"
           component={Pullday}
-          options={{headerShown: false}}
+          options={{headerShown: false, animation: 'slide_from_right'}}
         />
-        <Stack.Screen 
-          name="Legday" 
+        <Stack.Screen
+          name="Legday"
           component={Legday}
-          options={{headerShown: false}}
+          options={{headerShown: false, animation: 'slide_from_right'}}
         />
-        <Stack.Screen 
-          name="Stepper" 
+        <Stack.Screen
+          name="Stepper"
           component={Stepper}
-          options={{headerShown: false}}
+          options={{headerShown: false, animation: 'slide_from_bottom'}}
         />
       </Stack.Navigator>
+      <FlashMessage position="top" />
     </NavigationContainer>
   );
 };
