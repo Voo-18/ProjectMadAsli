@@ -10,6 +10,7 @@ import React from 'react';
 import Button from '../../Componets/atoms/Button';
 
 const StartFitness = ({navigation}) => {
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>

@@ -1,7 +1,14 @@
 import React from 'react';
 import {TextInput as RNTextInput, StyleSheet, View, Text} from 'react-native';
 
-const TextInput = ({label, placeholder, secureTextEntry = false, style}) => {
+const TextInput = ({
+  label,
+  placeholder,
+  secureTextEntry = false,
+  style,
+  value,
+  onChangeText,
+}) => {
   return (
     <View style={{marginBottom: 8}}>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -10,6 +17,8 @@ const TextInput = ({label, placeholder, secureTextEntry = false, style}) => {
         secureTextEntry={secureTextEntry}
         style={[styles.input, style]}
         placeholderTextColor="#8D92A3"
+        value={value}
+        onChangeText={onChangeText}
       />
     </View>
   );

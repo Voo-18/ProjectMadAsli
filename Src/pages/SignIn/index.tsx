@@ -7,34 +7,48 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import TextInput from '../../Componets/molecules/TextInput';
-import {Button} from '../../Componets/atoms/index';
+import Button from '../../Componets/atoms/Button';
 import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 import {showMessage} from 'react-native-flash-message';
+import {Alert} from 'react-native';
+type SignInProps = NativeStackScreenProps<any, 'SignIn'>;
 
-const SignIn = ({navigation}) => {
+const SignIn = ({navigation}: SignInProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
 
-  const onSubmit = () => {
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
-        const user = userCredential.user;
+const onSubmit = () => {
+  const auth = getAuth();
+  signInWithEmailAndPassword(auth, email, password)
+    .then(userCredential => {
+      const user = userCredential.user;
+      console.log('Login berhasil:', user.uid);
+      navigation.navigate('StartFitness', {uid: user.uid});
+    })
+    .catch(error => {
+      console.error('Login gagal:', error.message);
 
-        console.log('User signed in:', user);
-        navigation.navigate('Home', {uid: user.uid});
-      })
-      .catch(error => {
-        const errorMessage = error.message;
-        showMessage({
-          message: errorMessage,
-          type: 'danger',
-        });
-      });
-  };
+      let message = '';
+      switch (error.code) {
+        case 'auth/invalid-email':
+          message = 'Format email tidak valid.';
+          break;
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+          message = 'Email atau password salah.';
+          break;
+        default:
+          message = 'Terjadi kesalahan. Silakan coba lagi nanti.';
+      }
+
+      Alert.alert('Login Gagal', message);
+    });
+};
+
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -43,7 +57,7 @@ const SignIn = ({navigation}) => {
 
         <View style={styles.contentContainer}>
           <TextInput
-            label={'Email'}
+            label="Email"
             placeholder="Type your email"
             style={styles.input}
             value={email}
@@ -59,12 +73,9 @@ const SignIn = ({navigation}) => {
             secureTextEntry={true}
           />
 
-          <Button
-            onPress={onSubmit}
-            label="Log in"
-            />
+          <Button label="Log in" onPress={onSubmit} />
 
-          {/* Garis pemisah dan teks log in with */}
+          {/* Garis pemisah dan tombol Google login */}
           <View style={styles.dividerContainer}>
             <View style={styles.line} />
             <Text style={styles.loginWithText}>Log in with</Text>
@@ -116,13 +127,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 14,
     paddingVertical: 12,
+    marginBottom: 16,
   },
-  forgotContainer: {alignItems: 'flex-end', marginTop: 16},
-  forgotText: {color: '#FF6C44', fontSize: 12},
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 19,
+    marginTop: 20,
   },
   line: {
     flex: 1,

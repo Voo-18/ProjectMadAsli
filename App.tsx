@@ -2,7 +2,6 @@ import React from 'react';
 import SplashScreen from './Src/pages/SplashScreen';
 import SignIn from './Src/pages/SignIn';
 import SignUp from './Src/pages/SignUp';
-import Home from './Src/pages/Home';
 import Training from './Src/pages/Training';
 import Pushday from './Src/pages/Pushday';
 import Pullday from './Src/pages/Pullday';
@@ -14,6 +13,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import FlashMessage from 'react-native-flash-message';
 import './Src/config/Firebase';
+import StartFitness from './Src/pages/Home';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,8 +37,8 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen 
-          name="Home" 
-          component={Home}
+          name="StartFitness" 
+          component={StartFitness}
           options={{headerShown: false}} 
         />
         <Stack.Screen 
